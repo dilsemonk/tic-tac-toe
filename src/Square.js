@@ -4,9 +4,9 @@ export default function Square({ value, onClick }) {
   return (
     <button
       className="square bg-white border-2 border-gray-500 w-20 h-20 flex items-center justify-center text-2xl font-bold"
-      onClick={onClick} // Call the onClick function passed from the Board
+      onClick={onClick}
     >
-      {value}    
+      {value}
     </button>
   );
 }

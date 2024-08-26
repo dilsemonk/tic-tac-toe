@@ -1,84 +1,76 @@
-// Board.js
 import React, { useState } from 'react';
 import Square from './Square';
 
 function Board() {
-  const [squares, setSquares] = useState(Array(9).fill(null));
-  const [isXNext, setIsXNext] = useState(true);
+  const [board, setBoard] = useState(Array(9).fill(null));
+  const [isXPlayerNext, setIsXPlayerNext] = useState(true);
 
   const winningCombinations = [
     [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
+    [0, 4, 8],
     [0, 3, 6],
     [1, 4, 7],
     [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
+    [2, 4, 6],
+    [3, 4, 5],
+    [6, 7, 8]
   ];
 
-  function calculateWinner(squares) {
+  function findWinner(board) {
     for (let i = 0; i < winningCombinations.length; i++) {
       const [a, b, c] = winningCombinations[i];
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        return board[a];
       }
     }
     return null;
   }
 
-  function handleClick(index) {
-    const newSquares = squares.slice();
-  
-    console.log("Before click:", newSquares);
-  
-    if (newSquares[index] || calculateWinner(squares)) {
-      console.log("Invalid move or game already won");
+  function respondToPlayerMove(index) {
+    if (findWinner(board)) {
       return;
     }
-  
-    newSquares[index] = isXNext ? 'X' : 'O';
-    setSquares(newSquares);
-    setIsXNext(!isXNext);
-  
-    console.log("After click:", newSquares);
-    console.log("Winner:", calculateWinner(newSquares));
+
+    board[index] = isXPlayerNext ? 'X' : 'O';
+
+    setBoard(board);
+    setIsXPlayerNext(!isXPlayerNext);
   }
 
-  function renderSquare(index) {
+  function drawTicToeSquare(index) {
     return (
-      <Square 
-        value={squares[index]} 
-        onClick={() => handleClick(index)} 
+      <Square
+        value={board[index]}
+        onClick={() => respondToPlayerMove(index)}
       />
     );
   }
 
-  const winner = calculateWinner(squares);
+  const winner = findWinner(board);
   let status;
   if (winner) {
     status = `Winner: ${winner}`;
   } else {
-    status = `Next player: ${isXNext ? 'X' : 'O'}`;
+    status = `Next player: ${isXPlayerNext ? 'X' : 'O'}`;
   }
 
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="mb-4 text-xl font-semibold">{status}</div>
       <div className="flex">
-        {renderSquare(0)}
-        {renderSquare(1)}
-        {renderSquare(2)}
+        {drawTicToeSquare(0)}
+        {drawTicToeSquare(1)}
+        {drawTicToeSquare(2)}
       </div>
       <div className="flex">
-        {renderSquare(3)}
-        {renderSquare(4)}
-        {renderSquare(5)}
+        {drawTicToeSquare(3)}
+        {drawTicToeSquare(4)}
+        {drawTicToeSquare(5)}
       </div>
       <div className="flex">
-        {renderSquare(6)}
-        {renderSquare(7)}
-        {renderSquare(8)}
+        {drawTicToeSquare(6)}
+        {drawTicToeSquare(7)}
+        {drawTicToeSquare(8)}
       </div>
     </div>
   );
