@@ -13,7 +13,7 @@ function Board() {
     [2, 5, 8],
     [2, 4, 6],
     [3, 4, 5],
-    [6, 7, 8]
+    [6, 7, 8],
   ];
 
   function findWinner(board) {
@@ -27,13 +27,17 @@ function Board() {
   }
 
   function respondToPlayerMove(index) {
-    if (findWinner(board)) {
+    const haveWinner = findWinner(board);
+    const cellOccupied = board[index];
+    if (haveWinner || cellOccupied) {
       return;
     }
 
-    board[index] = isXPlayerNext ? 'X' : 'O';
+    // Create a copy of the board to ensure immutability
+    const newBoard = board.slice();
+    newBoard[index] = isXPlayerNext ? 'X' : 'O';
 
-    setBoard(board);
+    setBoard(newBoard);
     setIsXPlayerNext(!isXPlayerNext);
   }
 
@@ -47,27 +51,24 @@ function Board() {
   }
 
   const winner = findWinner(board);
-  let status;
-  if (winner) {
-    status = `Winner: ${winner}`;
-  } else {
-    status = `Next player: ${isXPlayerNext ? 'X' : 'O'}`;
-  }
+  const status = winner
+    ? `Winner: ${winner}`
+    : `Next player: ${isXPlayerNext ? 'X' : 'O'}`;
 
   return (
     <div className="flex flex-col items-center justify-center">
-      <div className="mb-4 text-xl font-semibold">{status}</div>
-      <div className="flex">
+      <div className="mb-4 text-xl font-semibold result">{status}</div>
+      <div className="flex firstrow">
         {drawTicToeSquare(0)}
         {drawTicToeSquare(1)}
         {drawTicToeSquare(2)}
       </div>
-      <div className="flex">
+      <div className="flex secondrow">
         {drawTicToeSquare(3)}
         {drawTicToeSquare(4)}
         {drawTicToeSquare(5)}
       </div>
-      <div className="flex">
+      <div className="flex thirdrow">
         {drawTicToeSquare(6)}
         {drawTicToeSquare(7)}
         {drawTicToeSquare(8)}
